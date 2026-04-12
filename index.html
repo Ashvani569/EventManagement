@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1> EventSphere</h1>
+</header>
+
+<section class="events">
+  <div class="card">
+    <h2>Music Fest 🎶</h2>
+    <p>Select your own date</p>
+    <button onclick="registerEvent('Music Fest')">Register</button>
+  </div>
+
+  <div class="card">
+    <h2>Tech Seminar 💻</h2>
+    <p>Select your own date</p>
+    <button onclick="registerEvent('Tech Seminar')">Register</button>
+  </div>
+</section>
+
+<section class="form-section">
+  <h2>Register Here</h2>
+  <form id="form">
+    <input type="text" id="name" placeholder="Enter Name" required>
+    <input type="email" id="email" placeholder="Enter Email" required>
+    <input type="text" id="event" placeholder="Event Name" readonly>
+
+    <!-- 🔥 New Date Input -->
+    <input type="date" id="date" required>
+
+    <button type="submit">Submit</button>
+  </form>
+</section>
+
+<section class="list">
+  <h2>Registered Users</h2>
+  <ul id="userList"></ul>
+</section>
+
+<script src="script.js"></script>
+
+</body>
+</html>

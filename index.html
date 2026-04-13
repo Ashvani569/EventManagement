@@ -1,50 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Event Management</title>
+  <title>Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <h1> EventSphere</h1>
+  <h2 id="welcome"></h2>
+  <button onclick="logout()">Logout</button>
 </header>
 
+<!-- 🔥 Date & Time Selection -->
+<div style="margin:20px;">
+  <input type="date" id="eventDate">
+  <input type="time" id="eventTime">
+</div>
+
 <section class="events">
-  <div class="card">
-    <h2>Music Fest 🎶</h2>
-    <p>Select your own date</p>
-    <button onclick="registerEvent('Music Fest')">Register</button>
-  </div>
-
-  <div class="card">
-    <h2>Tech Seminar 💻</h2>
-    <p>Select your own date</p>
-    <button onclick="registerEvent('Tech Seminar')">Register</button>
-  </div>
+  <div class="card" onclick="selectEvent('Music Fest')">🎶 Music Fest</div>
+  <div class="card" onclick="selectEvent('Tech Seminar')">💻 Tech Seminar</div>
+  <div class="card" onclick="selectEvent('Dance Show')">💃 Dance Show</div>
+  <div class="card" onclick="selectEvent('Coding Contest')">👨‍💻 Coding Contest</div>
 </section>
 
-<section class="form-section">
-  <h2>Register Here</h2>
-  <form id="form">
-    <input type="text" id="name" placeholder="Enter Name" required>
-    <input type="email" id="email" placeholder="Enter Email" required>
-    <input type="text" id="event" placeholder="Event Name" readonly>
-
-    <!-- 🔥 New Date Input -->
-    <input type="date" id="date" required>
-
-    <button type="submit">Submit</button>
-  </form>
+<section class="history">
+  <h3>Your Event History</h3>
+  <ul id="history"></ul>
 </section>
 
-<section class="list">
-  <h2>Registered Users</h2>
-  <ul id="userList"></ul>
+<!-- 🔥 Stats -->
+<section>
+  <h3>Event Stats</h3>
+  <div id="stats"></div>
 </section>
+
+<div id="popup"></div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

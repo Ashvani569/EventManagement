@@ -1,48 +1,99 @@
-let form = document.getElementById("form");
-let userList = document.getElementById("userList");
-
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-// 🔥 Prevent past date selection
-document.getElementById("date").min = new Date().toISOString().split("T")[0];
-
-// Show selected event
-function registerEvent(eventName) {
-  document.getElementById("event").value = eventName;
+// 🔐 Login check
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
 }
 
-// Display users
-function displayUsers() {
-  userList.innerHTML = "";
-  users.forEach(user => {
+// 👤 Current user
+let user = JSON.parse(localStorage.getItem("currentUser"));
+document.getElementById("welcome").innerText = "Welcome " + user.name;
+
+// 🔥 Unique key for each user
+let historyKey = "history_" + user.email;
+
+// 📦 Data (per user)
+let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+let list = document.getElementById("history");
+
+// 🔓 Logout
+function logout() {
+  localStorage.removeItem("loggedIn");
+  localStorage.removeItem("currentUser");
+  window.location.href = "login.html";
+}
+
+// 🎯 Event select (Date + Time)
+function selectEvent(eventName) {
+  let popup = document.getElementById("popup");
+
+  let date = document.getElementById("eventDate").value;
+  let time = document.getElementById("eventTime").value;
+
+  // ❌ Validation
+  if (!date || !time) {
+    popup.innerText = "⚠️ Please select date & time";
+    popup.className = "error show";
+    setTimeout(() => popup.classList.remove("show"), 2000);
+    return;
+  }
+
+  // 📌 Save record (NO user field needed now)
+  let record = {
+    event: eventName,
+    date: date,
+    time: time
+  };
+
+  history.push(record);
+
+  // 🔥 Save per user
+  localStorage.setItem(historyKey, JSON.stringify(history));
+
+  // 🎉 Popup
+  popup.innerText = `✅ Registered for ${eventName}`;
+  popup.className = "success show";
+  setTimeout(() => popup.classList.remove("show"), 2000);
+
+  showHistory();
+  showStats();
+}
+
+// 📜 User History (only current user)
+function showHistory() {
+  list.innerHTML = "";
+
+  history.forEach(h => {
     let li = document.createElement("li");
-
-    // 🔥 Date bhi show hoga
-    li.innerText = `${user.name} - ${user.event} (${user.date})`;
-
-    userList.appendChild(li);
+    li.innerText = `${h.event} - ${h.date} (${h.time})`;
+    list.appendChild(li);
   });
 }
 
-// Form submit
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
+// 📊 Stats (only current user data)
+function showStats() {
+  let statsBox = document.getElementById("stats");
+  statsBox.innerHTML = "";
 
-  let name = document.getElementById("name").value;
-  let email = document.getElementById("email").value;
-  let event = document.getElementById("event").value;
+  let eventCount = {};
+  let dateCount = {};
 
-  // 🔥 New date input
-  let date = document.getElementById("date").value;
+  history.forEach(h => {
+    eventCount[h.event] = (eventCount[h.event] || 0) + 1;
+    dateCount[h.date] = (dateCount[h.date] || 0) + 1;
+  });
 
-  let user = { name, email, event, date };
+  // Event-wise
+  for (let e in eventCount) {
+    statsBox.innerHTML += `<p>${e}: ${eventCount[e]} bookings</p>`;
+  }
 
-  users.push(user);
-  localStorage.setItem("users", JSON.stringify(users));
+  statsBox.innerHTML += "<br>";
 
-  displayUsers();
-  form.reset();
-});
+  // Date-wise
+  for (let d in dateCount) {
+    statsBox.innerHTML += `<p>${d}: ${dateCount[d]} bookings</p>`;
+  }
+}
 
-// Initial display
-displayUsers();
+// 🚀 Initial load
+showHistory();
+showStats();
